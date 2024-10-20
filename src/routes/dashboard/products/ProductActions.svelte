@@ -1,14 +1,29 @@
-<script>
-	import Button from '$lib/components/ui/button/button.svelte';
-	import EditIcon from '$lib/Icons/EditIcon.svelte';
-	import TrashIcon from '$lib/Icons/TrashIcon.svelte';
+<script lang="ts">
+	import type { Writable } from 'svelte/store';
+	import EditProductDialog from './EditProductDialog.svelte';
+	import DeleteProductDialog from './DeleteProductDialog.svelte';
+
+	export let product: number, products: Writable<Product[]>;
+
+	$: openEditDialog = false;
+	$: openDeleteDialog = false;
+
+	let currentProduct = $products.find((pr: Product) => pr.id === product) as Product;
 </script>
 
 <div>
-	<Button variant="ghost">
-		<EditIcon />
-	</Button>
-	<Button variant="ghost">
-		<TrashIcon />
-	</Button>
+	<EditProductDialog
+		open={openEditDialog}
+		product={currentProduct}
+		on:productUpdated={({ detail }) => {
+			$products = $products.map((pr) => (pr.id === product ? detail : pr));
+		}}
+	/>
+	<DeleteProductDialog
+		open={openDeleteDialog}
+		product={currentProduct}
+		on:productDeleted={({ detail }) => {
+			$products = $products.filter((pr) => pr.id !== detail);
+		}}
+	/>
 </div>

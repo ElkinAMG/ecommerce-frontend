@@ -1,5 +1,28 @@
+<script>
+	import { goto } from '$app/navigation';
+	import { supabase } from '$lib/supabaseClient';
+
+	$: userData = {
+		email: '',
+		password: ''
+	};
+
+	async function handleLogin() {
+		const { error, data } = await supabase.auth.signInWithPassword({
+			email: userData.email,
+			password: userData.password
+		});
+
+		if (error) {
+			console.error(error);
+		} else {
+			goto('/dashboard/products');
+		}
+	}
+</script>
+
 <div class="flex">
-	<form class="my-[250px] p-10 w-[500px]">
+	<form class="my-[250px] p-10 w-[500px]" on:submit={handleLogin}>
 		<!-- Email input -->
 		<div class="flex flex-wrap -mx-3 mb-6">
 			<div class="w-full px-3">
@@ -14,6 +37,7 @@
 					id="grid-password"
 					placeholder="john@doe.com"
 					type="email"
+					bind:value={userData.email}
 				/>
 			</div>
 		</div>
@@ -32,6 +56,7 @@
 					id="grid-password"
 					type="password"
 					placeholder="******************"
+					bind:value={userData.password}
 				/>
 			</div>
 		</div>
@@ -48,9 +73,9 @@
 			</div>
 		</div>
 
-        <div class="flex justify-center gap-1">
-            <p class="text-slate-600">Don't have an account yet?</p>
-            <a class="text-cyan-600 hover:text-cyan-500" href="/register">Sign Up</a>
-        </div>
+		<div class="flex justify-center gap-1">
+			<p class="text-slate-600">Don't have an account yet?</p>
+			<a class="text-cyan-600 hover:text-cyan-500" href="/register">Sign Up</a>
+		</div>
 	</form>
 </div>
