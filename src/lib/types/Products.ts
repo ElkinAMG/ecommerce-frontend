@@ -5,6 +5,7 @@ type Product = {
     sku: string;
     price: number;
     stock: number;
+    userId: number | string;
     images: Array<{ url: string, alt: string }>;
     createdAt: Date;
     updatedAt: Date;

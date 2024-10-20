@@ -1,7 +1,28 @@
-<div class="h-[900px] flex justify-end">
-	<form class="max-w-lg my-auto mr-5">
+<script>
+	import { supabase } from '$lib/supabaseClient';
 
-        <!-- First name -->
+	$: userData = {
+		firstName: '',
+		lastName: '',
+		email: '',
+		password: '',
+		address: {
+			city: '',
+			zip: ''
+		}
+	};
+
+	async function handleRegister() {
+		supabase.auth.signUp({
+			email: userData.email,
+			password: userData.password
+		});
+	}
+</script>
+
+<div class="h-[900px] flex justify-end">
+	<form class="max-w-lg my-auto mr-5" on:submit|preventDefault={handleRegister}>
+		<!-- First name -->
 		<div class="flex flex-wrap -mx-3 mb-6">
 			<div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
 				<label
@@ -15,6 +36,7 @@
 					id="grid-first-name"
 					type="text"
 					placeholder="Jane"
+					bind:value={userData.firstName}
 				/>
 				<!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
 			</div>
@@ -31,6 +53,7 @@
 					id="grid-last-name"
 					type="text"
 					placeholder="Doe"
+					bind:value={userData.lastName}
 				/>
 			</div>
 		</div>
@@ -49,11 +72,12 @@
 					id="grid-password"
 					placeholder="john@doe.com"
 					type="email"
+					bind:value={userData.email}
 				/>
 			</div>
 		</div>
 
-        <!-- Password -->
+		<!-- Password -->
 		<div class="flex flex-wrap -mx-3 mb-6">
 			<div class="w-full px-3">
 				<label
@@ -67,6 +91,7 @@
 					id="grid-password"
 					type="password"
 					placeholder="******************"
+					bind:value={userData.password}
 				/>
 				<p class="text-gray-600 text-xs italic">Make it as long and as crazy as you'd like</p>
 			</div>
@@ -74,31 +99,18 @@
 
 		<!-- Address -->
 		<div class="flex flex-wrap -mx-3 mb-2">
-			<div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-				<label
-					class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-					for="grid-city"
-				>
-					City
-				</label>
-				<input
-					class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-					id="grid-city"
-					type="text"
-					placeholder="Albuquerque"
-				/>
-			</div>
-			<div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+			<div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
 				<label
 					class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
 					for="grid-state"
 				>
-					State
+					City
 				</label>
 				<div class="relative">
 					<select
 						class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
 						id="grid-state"
+						bind:value={userData.address.city}
 					>
 						<option>Bogotá</option>
 						<option>Medellin</option>
@@ -116,7 +128,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+			<div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
 				<label
 					class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
 					for="grid-zip"
@@ -128,6 +140,7 @@
 					id="grid-zip"
 					type="text"
 					placeholder="90210"
+					bind:value={userData.address.zip}
 				/>
 			</div>
 		</div>
@@ -142,10 +155,10 @@
 			>
 		</div>
 
-        <div class="flex justify-center gap-1 mt-2">
-            <p class="text-slate-600">Already have an account?</p>
-            <a class="text-cyan-600 hover:text-cyan-500" href="/login">Sign In</a>
-        </div>
+		<div class="flex justify-center gap-1 mt-2">
+			<p class="text-slate-600">Already have an account?</p>
+			<a class="text-cyan-600 hover:text-cyan-500" href="/login">Sign In</a>
+		</div>
 	</form>
 </div>
 

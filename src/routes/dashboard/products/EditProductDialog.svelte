@@ -7,16 +7,15 @@
 
 	import { z } from 'zod';
 	import ErrorField from './ErrorField.svelte';
-	import { createProduct } from '$lib/services/products.svelte';
-	import { createEventDispatcher, getContext } from 'svelte';
+	import EditIcon from '$lib/Icons/EditIcon.svelte';
 	import { writable } from 'svelte/store';
+	import { updateProducts } from '$lib/services/products.svelte';
 
-	const dispatch = createEventDispatcher();
+	import { createEventDispatcher } from 'svelte';
 
 	// Props
-	export let open = false;
-
-	const user: any = getContext('user');
+	export let open = false,
+		product: Product;
 
 	// Vars
 	const isDesktop = mediaQuery('(min-width: 768px)');
@@ -27,46 +26,28 @@
 		stock: z.number().min(1)
 	});
 
-	let productForm = {
-		name: '',
-		description: '',
-		price: '',
-		stock: ''
-	};
+	const dispatch = createEventDispatcher();
 
 	const errors = writable([]);
-	$: defaultDisabled =
-		productForm.name.length > 0 &&
-		productForm.description.length > 0 &&
-		productForm.price.length > 0 &&
-		productForm.stock.length > 0;
 
 	let componentHandler = {
 		isLoading: false,
 		error: null
 	};
 
-	async function handleCreateProduct() {
+	async function handleUpdateProduct() {
 		componentHandler.isLoading = true;
 		try {
-			const createdProduct = await createProduct({
-				...productForm,
-				price: Number(productForm.price),
-				stock: Number(productForm.stock),
-				userId: user.id
+			const createdProduct = await updateProducts(product.id, {
+				...product,
+				price: Number(product.price),
+				stock: Number(product.stock)
 			});
 			componentHandler.error = null;
 
-			// Dispatch created product
-			dispatch('productCreated', createdProduct);
-
+			// Dispatch updated product
+			dispatch('productUpdated', createdProduct);
 			open = false;
-			productForm = {
-				name: '',
-				description: '',
-				price: '',
-				stock: ''
-			};
 		} catch (err: any) {
 			componentHandler.error = err.message;
 		} finally {
@@ -78,22 +59,24 @@
 {#if $isDesktop}
 	<Dialog.Root bind:open>
 		<Dialog.Trigger asChild let:builder>
-			<Button variant="default" builders={[builder]}>Add</Button>
+			<Button variant="ghost" builders={[builder]}>
+				<EditIcon />
+			</Button>
 		</Dialog.Trigger>
 
 		<Dialog.Content class="sm:max-w-[425px]">
 			<Dialog.Header>
-				<Dialog.Title>Create product</Dialog.Title>
-				<Dialog.Description>Create a new product. Click save when you're done.</Dialog.Description>
+				<Dialog.Title>Update product</Dialog.Title>
+				<Dialog.Description>Update a product. Click save when you're done.</Dialog.Description>
 			</Dialog.Header>
-			<form class="grid items-start gap-4" on:submit|preventDefault={handleCreateProduct}>
+			<form class="grid items-start gap-4" on:submit|preventDefault={handleUpdateProduct}>
 				<div class="grid gap-2">
 					<ErrorField
 						{formSchema}
 						{errors}
 						fieldName="Name"
 						placeholder="Enter your product name"
-						formData={productForm}
+						formData={product}
 					/>
 				</div>
 				<div class="grid gap-2">
@@ -102,7 +85,7 @@
 						{errors}
 						fieldName="Description"
 						placeholder="Enter your product description"
-						formData={productForm}
+						formData={product}
 					/>
 				</div>
 				<div class="grid grid-cols-2 gap-4">
@@ -112,7 +95,7 @@
 							{errors}
 							fieldName="Price"
 							placeholder="Enter price"
-							formData={productForm}
+							formData={product}
 							type="number"
 						/>
 					</div>
@@ -122,7 +105,7 @@
 							{errors}
 							fieldName="Stock"
 							placeholder="Enter stock"
-							formData={productForm}
+							formData={product}
 							type="number"
 						/>
 					</div>
@@ -157,14 +140,14 @@
 				<Dialog.Title>Create product</Dialog.Title>
 				<Dialog.Description>Create a new product. Click save when you're done.</Dialog.Description>
 			</Dialog.Header>
-			<form class="grid items-start gap-4 p-5" on:submit|preventDefault={handleCreateProduct}>
+			<form class="grid items-start gap-4 p-5" on:submit|preventDefault={handleUpdateProduct}>
 				<div class="grid gap-2">
 					<ErrorField
 						{formSchema}
 						{errors}
 						fieldName="Name"
 						placeholder="Enter your product name"
-						formData={productForm}
+						formData={product}
 					/>
 				</div>
 				<div class="grid gap-2">
@@ -173,7 +156,7 @@
 						{errors}
 						fieldName="Description"
 						placeholder="Enter your product description"
-						formData={productForm}
+						formData={product}
 					/>
 				</div>
 				<div class="grid grid-cols-2 gap-4">
@@ -183,7 +166,7 @@
 							{errors}
 							fieldName="Price"
 							placeholder="Enter price"
-							formData={productForm}
+							formData={product}
 							type="number"
 						/>
 					</div>
@@ -193,7 +176,7 @@
 							{errors}
 							fieldName="Stock"
 							placeholder="Enter stock"
-							formData={productForm}
+							formData={product}
 							type="number"
 						/>
 					</div>

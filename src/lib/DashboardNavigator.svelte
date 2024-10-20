@@ -1,7 +1,29 @@
 <script>
-	import LeftArrowIcon from './Icons/LeftArrowIcon.svelte';
+	import { goto } from '$app/navigation';
+	import { setContext } from 'svelte';
+	import HomeIcon from './Icons/HomeIcon.svelte';
 	import OrdersIcon from './Icons/OrdersIcon.svelte';
 	import ProductsIcon from './Icons/ProductsIcon.svelte';
+	import SignOutIcon from './Icons/SignOutIcon.svelte';
+	import SpinIcon from './Icons/SpinIcon.svelte';
+	import { supabase } from './supabaseClient';
+
+	$: isLoading = false;
+
+	async function handleSignOut() {
+		try {
+			isLoading = true;
+			await supabase.auth.signOut({
+				scope: 'global'
+			});
+			goto('/');
+			setContext('user', null);
+		} catch (err) {
+			console.error(err);
+		} finally {
+			isLoading = false;
+		}
+	}
 </script>
 
 <main class="flex flex-row">
@@ -28,14 +50,32 @@
 						<span class="text-sm"> Orders </span>
 					</li>
 				</a>
+
+				<a
+					href="/"
+					class="flex justify-start items-center gap-2 transition-all delay-80 ease-in-out p-3"
+				>
+					<li class="flex justify-start items-center gap-2">
+						<HomeIcon />
+						<span class="text-sm"> Home </span>
+					</li>
+				</a>
 			</div>
 
-			<li class="transition-all delay-80 ease-in-out pl-2">
-				<a href="/" class="flex justify-start items-center gap-2">
-					<LeftArrowIcon />
-					<span class="text-sm"> Back to Home </span>
-				</a>
-			</li>
+			<div class="space-y-5">
+				<button on:click={handleSignOut}>
+					<li
+						class="transition-all delay-80 ease-in-out pl-10 pb-4 flex justify-start items-center gap-2 cursor-pointer select-none"
+					>
+						<span class="text-sm"> Sign Out </span>
+						{#if isLoading}
+							<SpinIcon />
+						{:else}
+							<SignOutIcon />
+						{/if}
+					</li>
+				</button>
+			</div>
 		</ul>
 	</nav>
 	<section class="w-full">
