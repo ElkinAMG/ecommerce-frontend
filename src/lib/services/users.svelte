@@ -1,6 +1,8 @@
 <script lang="ts" context="module">
 	import { supabase } from '$lib/supabaseClient';
 
+	import { env } from '$env/dynamic/public';
+
 	async function getUser(userId: string) {
 		try {
 			const { error, data } = await supabase.auth.getSession();
@@ -13,7 +15,7 @@
 
 			headers['authorization'] = data.session?.access_token;
 
-			const res = await fetch(`http://localhost:3000/users/${userId}`, {
+			const res = await fetch(`http://${env.PUBLIC_API_URL}/users/${userId}`, {
 				headers
 			});
 			if (!res.ok) throw new Error('Unable to get user');
