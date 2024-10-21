@@ -1,13 +1,15 @@
 <script lang="ts" context="module">
 	import { supabase } from '$lib/supabaseClient';
 
+	import { env } from '$env/dynamic/public';
+
 	type Error = {
 		error: string;
 	};
 
 	async function getProducts(page: number, pageSize: number, searchInput?: string) {
 		const response = await fetch(
-			`http://localhost:3000/products?page=${page === 0 ? 1 : page}&pageSize=${pageSize} ${searchInput ? `&filter=${searchInput}` : ''} `
+			`http://${env.PUBLIC_API_URL}/products?page=${page === 0 ? 1 : page}&pageSize=${pageSize} ${searchInput ? `&filter=${searchInput}` : ''} `
 		);
 		if (response.ok) {
 			const data = (await response.json()) as {
@@ -30,7 +32,7 @@
 
 			headers['authorization'] = data.session?.access_token;
 
-			const res = await fetch('http://localhost:3000/products', {
+			const res = await fetch(`http://${env.PUBLIC_API_URL}/products`, {
 				method: 'POST',
 				body: JSON.stringify({
 					...product,
@@ -61,7 +63,7 @@
 
 			headers['authorization'] = data.session?.access_token;
 
-			const response = await fetch(`http://localhost:3000/products/${productId}`, {
+			const response = await fetch(`http://${env.PUBLIC_API_URL}/products/${productId}`, {
 				method: 'PATCH',
 				body: JSON.stringify(productData),
 				headers
@@ -90,7 +92,7 @@
 
 			headers['authorization'] = data.session?.access_token;
 
-			const response = await fetch(`http://localhost:3000/products/${productId}`, {
+			const response = await fetch(`http://${env.PUBLIC_API_URL}/products/${productId}`, {
 				method: 'DELETE',
 				headers
 			});
