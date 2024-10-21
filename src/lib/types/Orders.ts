@@ -1,10 +1,10 @@
 type Orders = {
-    id: number;
+    id?: number;
     user?: User;
     product?: Product;
-    userId: string;
-    productId: string;
+    userId?: number;
+    productId: number;
     quantity: number;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

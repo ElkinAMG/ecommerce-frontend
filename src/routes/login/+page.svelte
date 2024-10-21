@@ -1,5 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
+	4;
 	import { supabase } from '$lib/supabaseClient';
 
 	$: userData = {
@@ -8,7 +9,7 @@
 	};
 
 	async function handleLogin() {
-		const { error, data } = await supabase.auth.signInWithPassword({
+		const { error } = await supabase.auth.signInWithPassword({
 			email: userData.email,
 			password: userData.password
 		});
