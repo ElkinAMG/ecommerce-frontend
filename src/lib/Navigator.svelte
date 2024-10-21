@@ -1,9 +1,11 @@
 <script>
 	import { getContext } from 'svelte';
+	import { page } from '$app/stores';
 	import HomeIcon from './Icons/HomeIcon.svelte';
 	import UserIcon from './Icons/UserIcon.svelte';
 	import DashboardIcon from './Icons/DashboardIcon.svelte';
 	const usr = getContext('user');
+	$: pathname = $page.url.pathname;
 </script>
 
 <main>
@@ -17,16 +19,18 @@
 				</a>
 			</li>
 			<li class="transition-all delay-80 ease-in-out">
-				{#if !usr}
-					<a href="/login" class="flex flex-col justify-center items-center">
-						<UserIcon />
-						<span class="text-xs"> Sign In </span>
-					</a>
-				{:else}
-					<a href="/dashboard/products" class="flex flex-col justify-center items-center">
-						<DashboardIcon />
-						<span class="text-xs"> Dashboard </span>
-					</a>
+				{#if !['/login', '/register'].includes(pathname)}
+					{#if !$usr}
+						<a href="/login" class="flex flex-col justify-center items-center">
+							<UserIcon />
+							<span class="text-xs"> Sign In </span>
+						</a>
+					{:else}
+						<a href="/dashboard/products" class="flex flex-col justify-center items-center">
+							<DashboardIcon />
+							<span class="text-xs"> Dashboard </span>
+						</a>
+					{/if}
 				{/if}
 			</li>
 		</ul>

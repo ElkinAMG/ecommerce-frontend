@@ -1,6 +1,5 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { setContext } from 'svelte';
 	import HomeIcon from './Icons/HomeIcon.svelte';
 	import OrdersIcon from './Icons/OrdersIcon.svelte';
 	import ProductsIcon from './Icons/ProductsIcon.svelte';
@@ -17,7 +16,6 @@
 				scope: 'global'
 			});
 			goto('/');
-			setContext('user', null);
 		} catch (err) {
 			console.error(err);
 		} finally {

@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { createTable, Render, Subscribe, createRender } from 'svelte-headless-table';
 	import { addPagination } from 'svelte-headless-table/plugins';
-	import { readable, writable } from 'svelte/store';
+	import { writable } from 'svelte/store';
 	import * as Table from '$lib/components/ui/table';
 
 	import Button from '$lib/components/ui/button/button.svelte';
