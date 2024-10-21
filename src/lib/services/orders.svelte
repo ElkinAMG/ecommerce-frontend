@@ -19,7 +19,7 @@
 		headers['authorization'] = data.session?.access_token;
 
 		const response = await fetch(
-			`http://${env.PUBLIC_API_URL}/orders/${userId}?page=${page === 0 ? 1 : page}&pageSize=${pageSize} ${searchInput ? `&filter=${searchInput}` : ''}`,
+			`${env.PUBLIC_API_URL}/orders/${userId}?page=${page === 0 ? 1 : page}&pageSize=${pageSize} ${searchInput ? `&filter=${searchInput}` : ''}`,
 			{
 				headers
 			}
@@ -45,7 +45,7 @@
 
 			headers['authorization'] = data.session?.access_token;
 
-			const res = await fetch(`http://${env.PUBLIC_API_URL}/orders`, {
+			const res = await fetch(`${env.PUBLIC_API_URL}/orders`, {
 				method: 'POST',
 				body: JSON.stringify({
 					userId,
@@ -72,7 +72,7 @@
 
 			headers['authorization'] = data.session?.access_token;
 
-			const response = await fetch(`http://${env.PUBLIC_API_URL}/orders/${orderId}`, {
+			const response = await fetch(`${env.PUBLIC_API_URL}/orders/${orderId}`, {
 				method: 'DELETE',
 				headers
 			});

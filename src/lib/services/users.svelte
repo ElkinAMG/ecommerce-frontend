@@ -15,7 +15,7 @@
 
 			headers['authorization'] = data.session?.access_token;
 
-			const res = await fetch(`http://${env.PUBLIC_API_URL}/users/${userId}`, {
+			const res = await fetch(`${env.PUBLIC_API_URL}/users/${userId}`, {
 				headers
 			});
 			if (!res.ok) throw new Error('Unable to get user');
